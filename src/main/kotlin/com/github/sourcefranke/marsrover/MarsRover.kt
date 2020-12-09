@@ -72,26 +72,26 @@ enum class Direction (
     val right:      Move
 ) {
     NORTH (
-        forwards    = { it.copy(y = ++it.y) },
-        backwards   = { it.copy(y = --it.y) },
+        forwards    = { it.copy(y = it.y + 1) },
+        backwards   = { it.copy(y = it.y - 1) },
         left        = { it.copy(direction = WEST) },
         right       = { it.copy(direction = EAST) }
     ),
     WEST (
-        forwards    = { it.copy(x = --it.x) },
-        backwards   = { it.copy(x = ++it.x) },
+        forwards    = { it.copy(x = it.x - 1) },
+        backwards   = { it.copy(x = it.x + 1) },
         left        = { it.copy(direction = SOUTH) },
         right       = { it.copy(direction = NORTH) }
     ),
     SOUTH (
-        forwards    = { it.copy(y = --it.y) },
-        backwards   = { it.copy(y = ++it.y) },
+        forwards    = { it.copy(y = it.y - 1) },
+        backwards   = { it.copy(y = it.y + 1) },
         left        = { it.copy(direction = EAST) },
         right       = { it.copy(direction = WEST) }
     ),
     EAST (
-        forwards    = { it.copy(x = ++it.x) },
-        backwards   = { it.copy(x = --it.x) },
+        forwards    = { it.copy(x = it.x + 1) },
+        backwards   = { it.copy(x = it.x - 1) },
         left        = { it.copy(direction = NORTH) },
         right       = { it.copy(direction = SOUTH) }
     )
