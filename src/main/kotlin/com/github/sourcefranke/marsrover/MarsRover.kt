@@ -1,7 +1,5 @@
 package com.github.sourcefranke.marsrover
 
-import com.github.sourcefranke.marsrover.Direction.*
-
 /**
  * Represents the Mars rover to be navigated
  *
@@ -10,7 +8,7 @@ import com.github.sourcefranke.marsrover.Direction.*
  * @param y the y coordinate the rover is currently placed
  */
 data class MarsRover (
-    var direction: Direction = NORTH,
+    var direction: Direction = North(),
     var x: Int = 0,
     var y: Int = 0
 )
@@ -51,48 +49,51 @@ fun mapStepToMoveFunc (direction: Direction, step: Char): Move {
         'b' -> direction.backwards
         'l' -> direction.left
         'r' -> direction.right
-        else -> { rover: MarsRover -> rover }
+        else -> { it -> it }
     }
 }
 
 typealias Move = (MarsRover) -> MarsRover
 
 /**
- * Enumeration for possible directions a [MarsRover] can look to
+ * Sum type for possible directions a [MarsRover] can look to
  *
  * @param forwards [Move] function for moving forwards
  * @param backwards [Move] function for moving backwards
  * @param left [Move] function for turning left
  * @param right [Move] function for turning right
  */
-enum class Direction (
+sealed class Direction (
     val forwards:   Move,
     val backwards:  Move,
     val left:       Move,
     val right:      Move
-) {
-    NORTH (
-        forwards    = { it.copy(y = it.y + 1) },
-        backwards   = { it.copy(y = it.y - 1) },
-        left        = { it.copy(direction = WEST) },
-        right       = { it.copy(direction = EAST) }
-    ),
-    WEST (
-        forwards    = { it.copy(x = it.x - 1) },
-        backwards   = { it.copy(x = it.x + 1) },
-        left        = { it.copy(direction = SOUTH) },
-        right       = { it.copy(direction = NORTH) }
-    ),
-    SOUTH (
-        forwards    = { it.copy(y = it.y - 1) },
-        backwards   = { it.copy(y = it.y + 1) },
-        left        = { it.copy(direction = EAST) },
-        right       = { it.copy(direction = WEST) }
-    ),
-    EAST (
-        forwards    = { it.copy(x = it.x + 1) },
-        backwards   = { it.copy(x = it.x - 1) },
-        left        = { it.copy(direction = NORTH) },
-        right       = { it.copy(direction = SOUTH) }
-    )
-}
+)
+
+class North: Direction (
+    forwards    = { it.copy(y = it.y + 1) },
+    backwards   = { it.copy(y = it.y - 1) },
+    left        = { it.copy(direction = West()) },
+    right       = { it.copy(direction = East()) }
+)
+
+class West: Direction (
+    forwards    = { it.copy(x = it.x - 1) },
+    backwards   = { it.copy(x = it.x + 1) },
+    left        = { it.copy(direction = South()) },
+    right       = { it.copy(direction = North()) }
+)
+
+class South: Direction (
+    forwards    = { it.copy(y = it.y - 1) },
+    backwards   = { it.copy(y = it.y + 1) },
+    left        = { it.copy(direction = East()) },
+    right       = { it.copy(direction = West()) }
+)
+
+class East: Direction (
+    forwards    = { it.copy(x = it.x + 1) },
+    backwards   = { it.copy(x = it.x - 1) },
+    left        = { it.copy(direction = North()) },
+    right       = { it.copy(direction = South()) }
+)
